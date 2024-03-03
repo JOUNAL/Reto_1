@@ -10,15 +10,18 @@ Para este caso use un case segun la operacion aritmetica introducida por el usua
 num1= int(input("Digite los numeros a operar:"))
 num2= int(input())
 operacion= str(input("Digite la operacion a realizar:"))
-match operacion:
-    case "+":
-        print("El resultado de la operacion es:" + str(num1 + num2))
-    case "-":
-        print("El resultado de la operacion es:" + str(num1 - num2))
-    case "*":
-        print("El resultado de la operacion es:" + str(num1 * num2))
-    case "/":
-        print("El resultado de la operacion es:" + str(num1 / num2))
+def Operaciones(numero1,numero2,opera):
+    match opera:
+        case "+":
+            return (numero1 + numero2)
+        case "-":
+            return(numero1 - numero2)
+        case "*":
+            return(numero1 * numero2)
+        case "/":
+            return (numero1 / numero2)
+print("El resultado de la operacion es:" + str(Operaciones(num1,num2,operacion)))
+
 ```
 
 
@@ -35,17 +38,20 @@ Para el palindromo use una division entera para tener donde esta la mitad, y ent
 def palindromo(var1):
     i:int=0
     j:int=0
-    longitud=int(len(palabra))
+    longitud=int(len(var1))
     j=longitud//2
     while i < j:
-        if palabra[i]==palabra[longitud-(1+i)]:
+        if var1[i]==var1[longitud-(1+i)]:
             i+=1
         else:
-            return (palabra + " no es un palindromo")
-    return (palabra + " es un palindromo")
+            return 0
+    return 1
 
 palabra= str(input("Digite la palabra a validar:"))
-print(palindromo(palabra))
+if palindromo(palabra)==0:
+    print(palabra + " no es un palindromo")
+else:
+    print(palabra + " es un palindromo")
 ```
 
 ## Reto 1.3
@@ -54,8 +60,6 @@ Para este caso considere que introducia una lista de numeros, tendria que tener 
 
 ```python
 lista_total=[]
-lista_prima=[]
-i: int=0
 valor=0
 numero=True
 while numero==True:
@@ -64,20 +68,26 @@ while numero==True:
         lista_total.append(nuevo_numero)
     else:
         break
-while i<len(lista_total):
-    j: int=2
-    while j < int(lista_total[i]):
-        if int(lista_total[i]) % j != 0:
-            j +=1
-            if j==int(lista_total[i]):
-                lista_prima.append(lista_total[i])
-        else:
-            break
-    i +=1
-i=0
-while i<len(lista_prima):
-    print(lista_prima[i])
-    i +=1
+def num_primos(lista_x):
+    i: int=0
+    lista_prima=[]
+    while i<len(lista_x):
+        j: int=2
+        while j < int(lista_x[i]):
+            if int(lista_x[i]) % j != 0:
+                j +=1
+                if j==int(lista_x[i]):
+                    lista_prima.append(lista_x[i])
+            else:
+                break
+        i +=1
+    i=0
+    return lista_prima
+
+print("Los numeros primos de la lista digitada son:")
+while valor<len(num_primos(lista_total)):
+    print(num_primos(lista_total)[valor])
+    valor +=1
 ```
 
 ## Reto 1.4
@@ -86,10 +96,7 @@ La idea era ir sumando numero por numero en la lista, y si la suma era mas grand
 
 ```python
 lista_numeros=[]
-i: int=0
-valor=0
-valor_m=0
-posicion=0
+
 numero=True
 while numero==True:
     nuevo_numero= input("Digite la lista de numeros; o una letra para parar:")
@@ -97,15 +104,21 @@ while numero==True:
         lista_numeros.append(nuevo_numero)
     else:
         break
+def sum_mayor(lista_y):
+    i: int=0
+    valor=0
+    valor_m=0
+    posicion=0
+    while i<len(lista_y)-1:
+        valor=int(lista_y[i])+int(lista_y[i+1])
+        if valor>valor_m:
+            valor_m=valor
+            posicion=i
+        i +=1
+    print("Los numeros que dan la suma de mayor valor son " + str(lista_y[posicion]) + " y " + str(lista_y[posicion+1]))
+    return valor_m
+print("La mayor suma consecutiva de la lista es:" + str(sum_mayor(lista_numeros)))
 
-while i<len(lista_numeros)-1:
-    valor=int(lista_numeros[i])+int(lista_numeros[i+1])
-    if valor>valor_m:
-        valor_m=valor
-        posicion=i
-    i +=1
-
-print("Los numeros que dan la suma de mayor valor son " + str(lista_numeros[posicion]) + " y " + str(lista_numeros[posicion+1]) + " y el valor es:" + str(valor_m))
 
 ```
 ## Reto 1.5
@@ -113,106 +126,126 @@ print("Los numeros que dan la suma de mayor valor son " + str(lista_numeros[posi
 La idea era que por cada palabra hiciera una lista de las letras sin que se repitiera, despues esa lista de esa palabra se compararia con cada palabra, y si se verificaba que la cantidad de letras de la palabra a escanear era igual a su longitud comparada con la lista de letras, entonces esa palabra tenia las mismas letras y su posicion se añadia a una lista, y si esa palabra se repetia mas de una vez en la lista, se imprimia
 
 ```python
-lista_palabras=[]
-palabras_bien=[]
-palabra_base: str
-palabra_ahora: str
-letra: str
-i=0
-g=0
-d=0
+lista_pala=[]
 no_vacio=True
 while no_vacio==True:
     palabra= str(input("Digite las palabras que quiera evaluar que tengan los mismos caracteres; o deje el cambio vacio para terminar:"))
     if palabra !="":
-        lista_palabras.append(palabra)
+        lista_pala.append(palabra)
     else:
         break
     
+def letras_palabras(lista_palabras):
+    palabras_bien=[]
+    lista_aux=[]+lista_palabras
+    palabra_base: str
+    palabra_ahora: str
+    letra: str
+    i=0
+    g=0
+    d=0
+    while i<len(lista_palabras):
+        palabra_base=lista_palabras[i]
+        j=0
+        palabra_letras=[]
+        c=0
+        while c<len(palabra_base):
+            palabra_letras.append(palabra_base[c])
+            c +=1
+        c=0
+        while c<len(palabra_letras):
+            d=0
+            h=0
+            while h<len(palabra_letras):
+                a=palabra_letras[h]
+                b=palabra_letras[c]
+                if palabra_letras[h]==palabra_letras[c]:
+                    
+                    d +=1
+                if d>1:
+                    palabra_letras.pop(h)
+                    h -=1
+                    d -=1
+                h +=1
+            c +=1
+        
+        while j<len(lista_palabras):
+            palabra_ahora=lista_palabras[j]
+            k=0
 
-while i<len(lista_palabras):
-    palabra_base=lista_palabras[i]
-    j=0
-    palabra_letras=[]
-    c=0
-    while c<len(palabra_base):
-        palabra_letras.append(palabra_base[c])
-        c +=1
-    c=0
-    while c<len(palabra_letras):
-        d=0
-        h=0
-        while h<len(palabra_letras):
-            a=palabra_letras[h]
-            b=palabra_letras[c]
-            if palabra_letras[h]==palabra_letras[c]:
+            t=0
+            while k<len(palabra_letras):
+                w=0
                 
-                d +=1
-            if d>1:
-                palabra_letras.pop(h)
-                h -=1
-                d -=1
+                while w<len(palabra_ahora):
+                    if (palabra_letras[k]==palabra_ahora[w])==True:
+                        t +=1
+                
+                    w +=1
+                k +=1
+            if t==len(palabra_ahora):
+                palabras_bien.append(j)
+            j +=1
+        i +=1
+
+
+    c=0
+
+    i=len(palabras_bien)
+    while c<i:
+        h=0
+        d=0
+        while h<i:
+            if palabras_bien[h]==palabras_bien[c]:
+                d+=1
             h +=1
-        c +=1
-    
-    while j<len(lista_palabras):
-        palabra_ahora=lista_palabras[j]
-        k=0
+        if d==1:
+            palabras_bien.pop(c)
+            i=len(palabras_bien)
+            c -=1
+        c+=1 
 
-        t=0
-        while k<len(palabra_letras):
-            w=0
-            
-            while w<len(palabra_ahora):
-                if (palabra_letras[k]==palabra_ahora[w])==True:
-                    t +=1
-            
-                w +=1
-            k +=1
-        if t==len(palabra_ahora):
-            palabras_bien.append(j)
-        j +=1
-    i +=1
+    c=0
+    i=len(palabras_bien)
+    while c<i:
+        h=0
+        d=0
+        while h<i:
+            a=palabras_bien[h]
+            b=palabras_bien[c]
+            if palabras_bien[h]==palabras_bien[c]:
+                d+=1
+            h +=1
+        if d>1:
+            palabras_bien.pop(c)
+            i=len(palabras_bien)
+            c -=1
+        c+=1 
 
 
-c=0
+    palabras_bien=sorted(palabras_bien)
+    c=0
+    i=len(palabras_bien)
+    while c<i:
+        h=int(palabras_bien[c]) - c
+        lista_aux.pop(h)
+        c+=1
 
-i=len(palabras_bien)
-while c<i:
-    h=0
-    d=0
-    while h<i:
-        a=palabras_bien[h]
-        b=palabras_bien[c]
-        if palabras_bien[h]==palabras_bien[c]:
-            d+=1
-        h +=1
-    if d==1:
-        palabras_bien.pop(c)
-        i=len(palabras_bien)
-        c -=1
-    c+=1 
 
-c=0
-i=len(palabras_bien)
-while c<i:
-    h=0
-    d=0
-    while h<i:
-        a=palabras_bien[h]
-        b=palabras_bien[c]
-        if palabras_bien[h]==palabras_bien[c]:
-            d+=1
-        h +=1
-    if d>1:
-        palabras_bien.pop(c)
-        i=len(palabras_bien)
-        c -=1
-    c+=1 
+    c=0
+    i=len(lista_palabras)
+    while c<i:
+        h=0
+        b=len(lista_aux)
+        while h<b:
+            if lista_palabras[c]==lista_aux[h]:
+                lista_palabras.pop(c)
+                i=len(lista_palabras)
+                c -=1  
+            h +=1
+        c+=1 
+    return lista_palabras
 
-c=0
-i=len(palabras_bien)
-while c<i:
-    print(lista_palabras[palabras_bien[c]])
-    c+=1
+print(letras_palabras(lista_pala))
+
 ```
